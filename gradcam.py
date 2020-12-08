@@ -83,11 +83,6 @@ class GradCam:
         if self.cuda:
             self.model = model.cuda()
 
-        #self.max_dict = dict()
-        #self.min_dict = dict()
-        #self.minimum = 100
-        #self.maximum = -100
-
         self.extractor = ModelOutputs(self.model, self.feature_module, target_layer_names)
 
     def forward(self, input):
@@ -134,37 +129,12 @@ class GradCam:
 
             another_list = []
             for i, cam in enumerate(cams_list):
-                #if torch.max(cam) > self.maximum:
-                #    self.maximum = torch.max(cam)
-                #    maximum = self.maximum.item()
-                #    self.max_dict[maximum] = 1
-                #else:
-                #    maximum = self.maximum.item()
-                #    self.max_dict[maximum] += 1
-
-                #if torch.min(cam) < self.minimum:
-                #    self.minimum = torch.min(cam)
-                #    minimum = self.minimum.item()
-                #    self.min_dict[minimum] = 1
-                #else:
-                #    minimum = self.minimum.item()
-                #    self.min_dict[minimum] += 1
-
                 cam = torch.where(cam > 0, cam*4.38, cam*1.095)
-
-                #cam = torch.max(cam, torch.zeros(cam.size(), dtype=torch.float32)) # ReLU
-                if torch.max(cam) == 0:
-                    another_list.append(cam)
-                #else:
-                #    cam = cam / torch.max(cam) # Normalize result between [0,1]
-                #    another_list.append(cam)
                 cam = self.sigmoid(cam)
                 another_list.append(cam)
-            #self.minimum = minimum
-            #self.maximum = maximum
 
             masks = torch.stack(another_list).double()
-            return masks #self.max_dict, self.min_dict
+            return masks 
 
         if training == False:
             cams_list = []

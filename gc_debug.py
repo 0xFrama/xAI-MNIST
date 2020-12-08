@@ -103,14 +103,6 @@ def training_model(model, train_loader, bce, cross_entropy, optimizer, epoch, nu
             prec = prec / 100
             rec = rec / 100
             corr = corr / 100
-
-
-            #if maximum > prev_maximum:
-            #    prev_maximum = maximum
-            #if minimum < prev_minimum:
-            #    prev_minimum = minimum
-
-            # gradcam loss: {:.4f}, label loss: {:.4f}, Accuracy: {:.2f}%, loss_gradcam.item(), loss_labels.item(), (correct/total)*100,
   
             if (i + 1) % 100 == 0:                
                 print('Epoch [{}/{}], Step [{}/{}], Total Loss: {:.4f}, loss gradcam: {:.4f}, loss label: {:.4f}, Accuracy: {:.2f}%, Precision: {:.2f}%, Recall: {:.2f}%, Correlation: {:.2f}%'
@@ -120,9 +112,6 @@ def training_model(model, train_loader, bce, cross_entropy, optimizer, epoch, nu
                 #writer.add_scalar("Training: Precision", prec, str(epoch + 1)+'_'+str(i+1))
                 #writer.add_scalar("Training: Recall", rec, str(epoch + 1)+'_'+str(i+1))
                 #writer.add_scalar("Training: Correlation", corr, str(epoch + 1)+'_'+str(i+1))
-
-    #save_obj(maximum, 'maxdict_'+'epoch_'+str(epoch+1))
-    #save_obj(minimum, 'mindict_'+'epoch_'+str(epoch+1))
 
 def testing_model(model, test_loader, writer, epoch):
     for i, (images, labels) in enumerate(test_loader):
@@ -203,8 +192,8 @@ if __name__ == '__main__':
 
     trans = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 
-    train_dataset = datasets.MNIST(root='./data', train=True, transform=trans, download=False)
-    test_dataset = datasets.MNIST(root='./data', train=False, transform=trans, download=False)
+    train_dataset = datasets.MNIST(root='./data', train=True, transform=trans, download=True)
+    test_dataset = datasets.MNIST(root='./data', train=False, transform=trans, download=True)
 
     train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
